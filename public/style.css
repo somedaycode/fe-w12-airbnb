@@ -48,18 +48,17 @@ a {
 }
 
 .logo-font {
+    padding-right: 70px;
     font-size: 1.6rem;
     font-weight: var(--font-weight);
     color: var(--font-color);
 }
 
 .top-list {
-    padding: 0 50px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     font-size: 1rem;
-    text-align: center;
     color: var(--font-color);
 }
 
@@ -69,16 +68,13 @@ a {
 }
 
 .nav {
+    width: 200px;
     font-size: 16px;
     font-weight: bold;
     text-align: center;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-}
-
-.nav-list {
-    margin: 0 10px;
 }
 
 .nav-btn {
