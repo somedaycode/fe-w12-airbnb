@@ -55,41 +55,43 @@ export class Calendar {
     const daysClickedCount = Array.from(dayClicked) //
       .filter((day) => day.classList.contains('calendar-day-clicked')).length;
 
-    this.paintClickedDaysGap(daysClickedCount, isNumber);
+    this.paintClickedDaysGap(daysClickedCount, target);
   }
 
-  paintClickedDaysGap(dayClicked, targetNumber) {
-    const [dayList, dayClickedIndex] = this.getClickedDayList();
+  paintClickedDaysGap(dayClicked, target) {
+    const [dayLists, dayClickedIndex] = this.getClickedDayList();
     switch (dayClicked) {
       case 1:
-        dayList.forEach((day) => day.classList.remove('calendar-day-between'));
+        this.initPaintBetweenDays(dayLists);
         break;
       case 2:
-        const [firstDayClicked, lastDayClicked] = dayClickedIndex;
-        dayList //
-          .slice(firstDayClicked, lastDayClicked + 1)
-          .forEach((day) => day.classList.add('calendar-day-between'));
+        const [firstD, lastD] = dayClickedIndex;
+        this.paintBetweenDays(dayLists, firstD, lastD);
         break;
       case 3:
-        // 아직 구현 중
-        const [first, middle, last] = dayClickedIndex;
-        console.log(middle, last);
-        let clickedNumber = Number(targetNumber);
-        if (clickedNumber > last) {
-          dayList[middle].classList.remove('calendar-day-clicked');
-          clickedNumber = last;
-        } else {
-          dayList[last].classList.remove('calendar-day-clicked');
-          clickedNumber = middle;
-        }
-
-        dayList.forEach((day) => day.classList.remove('calendar-day-between'));
-        dayList
-          .slice(first, clickedNumber + 1)
-          .forEach((day) => day.classList.add('calendar-day-between'));
+        const [firstDay, middle, lastDay] = dayClickedIndex;
+        const clickedNumber = this.getLastClickNumber(
+          dayLists,
+          Number(target.innerText),
+          target,
+          middle,
+          lastDay
+        );
+        this.initPaintBetweenDays(dayLists);
+        this.paintBetweenDays(dayLists, firstDay, clickedNumber);
         break;
       default:
     }
+  }
+
+  initPaintBetweenDays(dayLists) {
+    dayLists.forEach((day) => day.classList.remove('calendar-day-between'));
+  }
+
+  paintBetweenDays(dayLists, firstDay, LastDay) {
+    dayLists
+      .slice(firstDay, LastDay + 1)
+      .forEach((day) => day.classList.add('calendar-day-between'));
   }
 
   getClickedDayList() {
@@ -101,6 +103,22 @@ export class Calendar {
       })
       .filter((isNumber) => typeof isNumber === 'number');
     return [daysNodeArr, clickedIndex];
+  }
+
+  getLastClickNumber(dayLists, clickedNumber, target, middle, lastDay) {
+    if (!target.classList.contains('calendar-day-between')) {
+      clickedNumber += lastDay;
+    }
+
+    if (clickedNumber > lastDay) {
+      dayLists[middle].classList.remove('calendar-day-clicked');
+      clickedNumber = lastDay;
+    } else {
+      dayLists[lastDay].classList.remove('calendar-day-clicked');
+      clickedNumber = middle;
+    }
+
+    return clickedNumber;
   }
 
   rightBtnClickHandler({ target }) {
